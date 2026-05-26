@@ -1,0 +1,44 @@
+# Scaffolding Progress Checklist
+
+- [x] Root configuration and files
+  - [x] `transport-app/package.json`
+  - [x] `transport-app/.gitignore`
+  - [x] `transport-app/.env.example`
+- [x] Config package (`packages/config`)
+  - [x] `packages/config/tsconfig.base.json`
+  - [x] `packages/config/.eslintrc.js`
+  - [x] `packages/config/.prettierrc`
+- [x] Shared types package (`packages/shared-types`)
+  - [x] `packages/shared-types/package.json`
+  - [x] `packages/shared-types/tsconfig.json`
+  - [x] `packages/shared-types/src/index.ts`
+- [x] UI Kit package (`packages/ui-kit`)
+  - [x] `packages/ui-kit/package.json`
+  - [x] `packages/ui-kit/tsconfig.json`
+  - [x] `packages/ui-kit/src/index.ts`
+- [x] API app (`apps/api`)
+  - [x] `apps/api/package.json`
+  - [x] `apps/api/tsconfig.json`
+  - [x] `apps/api/.env.example`
+  - [x] `apps/api/src/index.ts`
+- [x] Web app (`apps/web`)
+  - [x] `apps/web/package.json`
+  - [x] `apps/web/tsconfig.json`
+  - [x] `apps/web/.env.example`
+  - [x] `apps/web/next.config.mjs`
+  - [x] `apps/web/src/app/page.tsx`
+  - [x] `apps/web/src/app/layout.tsx`
+  - [x] `apps/web/public/sw.js`
+- [x] Infrastructure, workflows, & docs
+  - [x] `infra/docker/api.Dockerfile`
+  - [x] `infra/docker/web.Dockerfile`
+  - [x] `infra/migrations/.gitkeep`
+  - [x] `infra/scripts/migrate.ts`
+  - [x] `infra/scripts/seed.ts`
+  - [x] `docs/.gitkeep`
+  - [x] `.github/workflows/ci.yml`
+  - [x] `.github/workflows/deploy.yml`
+  - [x] `docker-compose.yml`
+  - [x] `docker-compose.prod.yml`
+- [x] Verification
+  - [x] Run typescript typechecking and dependencies check

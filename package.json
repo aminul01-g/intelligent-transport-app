@@ -1,0 +1,30 @@
+{
+  "name": "intelligent-transport-ecosystem",
+  "version": "1.0.0",
+  "description": "Production-grade monorepo for the Intelligent Transport Ecosystem",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"api,web\" -c \"blue,green\" \"npm run dev -w @transport/api\" \"npm run dev -w @transport/web\"",
+    "build:api": "npm run build -w @transport/api",
+    "build:web": "npm run build -w @transport/web",
+    "lint": "eslint \"**/*.{ts,tsx,js,jsx}\" --max-warnings 0",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  }
+}

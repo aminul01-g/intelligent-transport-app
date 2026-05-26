@@ -1,0 +1,38 @@
+# Production docker-compose override file
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  postgres:
+    # TODO: Configure production-grade backup strategy volume mounts
+    # TODO: Disable port forwarding to the host machine for safety
+    # ports: !remove
+    #   - "5432:5432"
+    restart: always
+
+  redis:
+    # TODO: Enable Redis authentication (requirepass) and TLS
+    # TODO: Disable port forwarding to the host machine
+    # ports: !remove
+    #   - "6379:6379"
+    restart: always
+
+  api:
+    build:
+      target: runner # Uses the lightweight, production-optimised Docker stage
+      args:
+        NODE_ENV: production
+    # TODO: Set memory limits, CPU shares, and logging rotation policies
+    # TODO: Bind API to SSL / HTTPS configuration or setup reverse proxy
+    restart: always
+
+  web:
+    build:
+      target: runner # Uses the lightweight, production-optimised Docker stage
+      args:
+        NODE_ENV: production
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL_PROD:-https://api.transport.app}
+    # TODO: Integrate CDN caching headers or connect behind Nginx/Traefik reverse proxy
+    # TODO: Setup server-side logging integration
+    restart: always
