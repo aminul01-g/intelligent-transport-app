@@ -1,52 +1,68 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { Vehicle } from '@transport/shared-types';
+import http from 'http';
+import app from './app';
+import { env } from './config/env';
+import { db } from './db';
+import { cache } from './cache';
+import { initSocketIO } from './realtime';
 
-dotenv.config();
+// ──────────────────────────────────────────────
+// Server bootstrap
+// ──────────────────────────────────────────────
 
-const app = express();
-const port = process.env.PORT || 4000;
+const server = http.createServer(app);
 
-app.use(cors());
-app.use(express.json());
+// Attach Socket.IO to the HTTP server
+initSocketIO(server);
 
-// Basic health check endpoint
-app.get('/health', (_req: Request, res: Response) => {
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    service: 'intelligent-transport-api',
+async function start(): Promise<void> {
+  // Eagerly connect Redis (both main + subscriber)
+  await cache.connect();
+  console.log('[BOOT] Redis connected');
+
+  server.listen(env.API_PORT, () => {
+    console.log(
+      `[BOOT] Server listening on port ${env.API_PORT} (${env.NODE_ENV})`,
+    );
   });
+}
+
+start().catch((err) => {
+  console.error('[BOOT] Failed to start server:', err);
+  process.exit(1);
 });
 
-// Endpoint serving typed vehicle mock data
-app.get('/api/vehicles', (_req: Request, res: Response) => {
-  const mockVehicles: Vehicle[] = [
-    {
-      id: 'v-001',
-      vin: '1HM1234567890ABCD',
-      type: 'EV_SHUTTLE',
-      model: 'TransitEV-X2',
-      capacity: 24,
-      status: 'ACTIVE',
-      lastUpdated: new Date().toISOString(),
-    },
-    {
-      id: 'v-002',
-      vin: '1HM9876543210EFGH',
-      type: 'BUS',
-      model: 'CityLiner-G3',
-      capacity: 85,
-      status: 'MAINTENANCE',
-      lastUpdated: new Date().toISOString(),
-    },
-  ];
-  res.json(mockVehicles);
-});
+// ──────────────────────────────────────────────
+// Graceful shutdown
+// ──────────────────────────────────────────────
 
-app.listen(port, () => {
-  console.log(
-    `[API] Server is running on port ${port} under ${process.env.NODE_ENV || 'development'} mode`,
-  );
-});
+const SHUTDOWN_TIMEOUT_MS = 10_000;
+
+async function shutdown(signal: string): Promise<void> {
+  console.log(`\n[SHUTDOWN] ${signal} received — starting graceful shutdown`);
+
+  // 1. Stop accepting new connections
+  server.close(() => {
+    console.log('[SHUTDOWN] HTTP server closed');
+  });
+
+  // 2. Wait for in-flight requests to drain (max 10s)
+  const forceExit = setTimeout(() => {
+    console.error('[SHUTDOWN] Timed out waiting for connections to drain — forcing exit');
+    process.exit(1);
+  }, SHUTDOWN_TIMEOUT_MS);
+
+  try {
+    // 3. Close infrastructure connections
+    await Promise.all([db.close(), cache.close()]);
+    console.log('[SHUTDOWN] All connections closed — exiting');
+    clearTimeout(forceExit);
+    process.exit(0);
+  } catch (err) {
+    console.error('[SHUTDOWN] Error during cleanup:', err);
+    clearTimeout(forceExit);
+    process.exit(1);
+  }
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

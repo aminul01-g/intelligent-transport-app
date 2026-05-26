@@ -1,3 +1,9 @@
+// ── New shared contracts ──
+export * from './enums';
+export * from './api.types';
+export * from './live-bus.types';
+
+// ── Legacy types (Prompt 1.1) ──
 export type VehicleType = 'BUS' | 'TRAIN' | 'TRAM' | 'METRO' | 'EV_SHUTTLE';
 
 export type VehicleStatus =
