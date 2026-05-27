@@ -26,5 +26,8 @@
     "eslint-plugin-import": "^2.32.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.4.6"
   }
 }
