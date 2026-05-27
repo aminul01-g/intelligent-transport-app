@@ -1,0 +1,32 @@
+# Next.js Web App Setup Tasks
+
+- [x] **Config & Styling Setup**
+  - [x] Configure `apps/web/next.config.mjs`
+  - [x] Create `apps/web/tailwind.config.ts`
+  - [x] Create `apps/web/postcss.config.js`
+  - [x] Create `apps/web/src/app/globals.css`
+  - [x] Create `apps/web/src/lib/cn.ts`
+  - [x] Create `packages/ui-kit/src/utils/cn.ts`
+  - [x] Create `packages/ui-kit/src/ToastContainer.tsx`
+  - [x] Export elements in `packages/ui-kit/src/index.ts`
+- [x] **Layout, Providers & Root Page**
+  - [x] Create supporting types: `User` and `Notification` in `apps/web/src/types`
+  - [x] Create `apps/web/src/lib/auth-options.ts` (NextAuth options stub)
+  - [x] Create `apps/web/src/app/providers.tsx` (Client component)
+  - [x] Update `apps/web/src/app/layout.tsx`
+  - [x] Update `apps/web/src/app/page.tsx` (Root redirect)
+- [x] **Zustand State Stores**
+  - [x] Create `apps/web/src/store/auth.store.ts`
+  - [x] Create `apps/web/src/store/notifications.store.ts`
+  - [x] Create `apps/web/src/store/socket.store.ts`
+- [x] **API Client & Guard**
+  - [x] Create `apps/web/src/lib/api-client.ts` (Mutex-based JWT token refresh)
+  - [x] Create `apps/web/src/components/guards/RoleGuard.tsx`
+- [x] **Route Stubs**
+  - [x] Auth: `/login`, `/register`
+  - [x] Passenger: `/passenger/dashboard`, `/passenger/map`, `/passenger/wallet`, `/passenger/history`
+  - [x] Driver: `/driver/dashboard`, `/driver/navigation`, `/driver/check-in`
+  - [x] Manager: `/manager/dashboard`, `/manager/fleet`
+  - [x] Company: `/company/dashboard`, `/company/analytics`
+- [x] **Verification**
+  - [x] Build and typecheck checks

@@ -1,9 +1,27 @@
 import React from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import { Providers } from './providers';
+import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: 'Intelligent Transport Ecosystem',
+  title: {
+    template: '%s | Intelligent Transport Ecosystem',
+    default: 'Intelligent Transport Ecosystem',
+  },
   description: 'Enterprise fleet monitoring and telemetry platform.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -12,19 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }): React.ReactElement {
   return (
-    <html lang="en">
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          fontFamily:
-            'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          background: 'radial-gradient(ellipse at top, #18181b, #09090b)',
-          color: '#f4f4f5',
-          minHeight: '100vh',
-        }}
-      >
-        {children}
+    <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased min-h-screen bg-zinc-950 text-zinc-50">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
