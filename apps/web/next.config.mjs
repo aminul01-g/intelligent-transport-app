@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Produces a self-contained Next.js server in .next/standalone/ — required
+  // for the Docker runner stage in infra/docker/web.Dockerfile.
+  output: 'standalone',
   reactStrictMode: true,
   transpilePackages: ['@transport/shared-types', '@transport/ui-kit'],
   typescript: {

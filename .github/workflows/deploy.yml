@@ -17,8 +17,8 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     permissions:
-      contents: read   # Checkout the repository
-      packages: write  # Push to GitHub Container Registry (ghcr.io)
+      contents: read # Checkout the repository
+      packages: write # Push to GitHub Container Registry (ghcr.io)
 
     env:
       REGISTRY: ghcr.io
