@@ -45,6 +45,9 @@ const envSchema = z.object({
   VAPID_PUBLIC_KEY: z.string().min(1),
   VAPID_PRIVATE_KEY: z.string().min(1),
   VAPID_SUBJECT: z.string().min(1),
+
+  // File uploads
+  UPLOAD_DIR: z.string().default('./uploads'),
 });
 
 // ──────────────────────────────────────────────

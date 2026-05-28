@@ -1,4 +1,4 @@
-import { Pool, PoolClient, QueryResult } from 'pg';
+import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 import { env } from '../config/env';
 
 // ──────────────────────────────────────────────
@@ -25,7 +25,7 @@ pool.on('error', (err) => {
  * @example
  *   const { rows } = await db.query<User>('SELECT * FROM users WHERE id = $1', [id]);
  */
-async function query<T extends Record<string, unknown> = Record<string, unknown>>(
+async function query<T extends QueryResultRow = any>(
   sql: string,
   params?: unknown[],
 ): Promise<QueryResult<T>> {

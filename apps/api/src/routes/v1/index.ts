@@ -1,6 +1,9 @@
 import { Router } from 'express';
+import { authRouter } from '../../modules/auth/auth.controller';
 
 const v1Router = Router();
+
+v1Router.use('/auth', authRouter);
 
 /**
  * GET /api/v1

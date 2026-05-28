@@ -53,3 +53,13 @@ export enum IncidentStatus {
   RESOLVED = 'RESOLVED',
   CLOSED = 'CLOSED',
 }
+
+// ──────────────────────────────────────────────
+// Documents
+// ──────────────────────────────────────────────
+
+export enum DocumentStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
