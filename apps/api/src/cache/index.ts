@@ -101,6 +101,58 @@ async function subscribe(
   });
 }
 
+/**
+ * Pattern-based subscription using PSUBSCRIBE.
+ *
+ * Needed for wildcard channels like 'bus:live:*'.  Uses the dedicated
+ * subscriber client and listens on the 'pmessage' event.
+ */
+async function psubscribe(
+  pattern: string,
+  handler: (channel: string, message: unknown) => void,
+): Promise<void> {
+  await subscriber.psubscribe(pattern);
+  subscriber.on('pmessage', (_pat, ch, raw) => {
+    try {
+      handler(ch, JSON.parse(raw));
+    } catch {
+      handler(ch, raw);
+    }
+  });
+}
+
+// ──────────────────────────────────────────────
+// Sorted-set operations (telemetry anomaly detection)
+// ──────────────────────────────────────────────
+
+async function zadd(key: string, score: number, member: string): Promise<void> {
+  await redis.zadd(key, score, member);
+}
+
+async function zremrangeByRank(key: string, start: number, stop: number): Promise<void> {
+  await redis.zremrangebyrank(key, start, stop);
+}
+
+/**
+ * Returns all members in the sorted set between `start` and `stop` ranks,
+ * each paired with its score.
+ *
+ * ioredis returns a flat array [member1, score1, member2, score2, …] when
+ * the WITHSCORES flag is used, so we pair them up before returning.
+ */
+async function zrangeWithScores(
+  key: string,
+  start: number,
+  stop: number,
+): Promise<Array<{ member: string; score: number }>> {
+  const results = await redis.zrange(key, start, stop, 'WITHSCORES');
+  const entries: Array<{ member: string; score: number }> = [];
+  for (let i = 0; i < results.length; i += 2) {
+    entries.push({ member: results[i]!, score: Number(results[i + 1]) });
+  }
+  return entries;
+}
+
 // ──────────────────────────────────────────────
 // Health & lifecycle
 // ──────────────────────────────────────────────
@@ -132,7 +184,12 @@ export const cache = {
   del,
   publish,
   subscribe,
+  psubscribe,
+  zadd,
+  zremrangeByRank,
+  zrangeWithScores,
   isHealthy,
   close,
   connect,
 } as const;
+

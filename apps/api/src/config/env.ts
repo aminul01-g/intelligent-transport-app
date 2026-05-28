@@ -33,7 +33,7 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
 
   // Google Maps
-  GOOGLE_MAPS_API_KEY: z.string().min(1),
+  GOOGLE_MAPS_API_KEY: z.string().optional().default(''),
 
   // SMTP
   SMTP_HOST: z.string().min(1),

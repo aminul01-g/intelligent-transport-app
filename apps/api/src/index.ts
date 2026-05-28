@@ -4,6 +4,8 @@ import { env } from './config/env';
 import { db } from './db';
 import { cache } from './cache';
 import { initSocketIO } from './realtime';
+import { initTelemetryGateway } from './modules/telemetry/telemetry.gateway';
+import { telemetryService } from './modules/telemetry/telemetry.service';
 
 // ──────────────────────────────────────────────
 // Server bootstrap
@@ -14,10 +16,16 @@ const server = http.createServer(app);
 // Attach Socket.IO to the HTTP server
 initSocketIO(server);
 
+// Attach telemetry gateway (registers event handlers)
+initTelemetryGateway();
+
 async function start(): Promise<void> {
   // Eagerly connect Redis (both main + subscriber)
   await cache.connect();
   console.log('[BOOT] Redis connected');
+
+  // Start periodic flush of telemetry buffer
+  telemetryService.startFlushLoop();
 
   server.listen(env.API_PORT, () => {
     console.log(
@@ -52,8 +60,13 @@ async function shutdown(signal: string): Promise<void> {
   }, SHUTDOWN_TIMEOUT_MS);
 
   try {
-    // 3. Close infrastructure connections
+    // 3. Flush any buffered telemetry records
+    telemetryService.stopFlushLoop();
+    await telemetryService.flushBuffer();
+
+    // 4. Close infrastructure connections
     await Promise.all([db.close(), cache.close()]);
+    
     console.log('[SHUTDOWN] All connections closed — exiting');
     clearTimeout(forceExit);
     process.exit(0);
