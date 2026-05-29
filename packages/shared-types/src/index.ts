@@ -1,4 +1,4 @@
-import { UserRole, PassengerCategory, DocumentStatus } from './enums';
+import { UserRole, PassengerCategory, DocumentStatus, TripStatus, TransactionType } from './enums';
 
 // ── New shared contracts ──
 export * from './enums';
@@ -125,4 +125,83 @@ export interface Alert {
   message: string;
   timestamp: string;
   resolved: boolean;
+}
+
+// ──────────────────────────────────────────────
+// Ticketing, Fares & Operations Types
+// ──────────────────────────────────────────────
+
+/** Mirrors the route_stops table. */
+export interface RouteStop {
+  id: string;
+  route_id: string;
+  stop_name: string;
+  latitude: string;
+  longitude: string;
+  sequence_order: number;
+  distance_from_previous_km: string;
+  estimated_travel_time_seconds: number;
+}
+
+/** Mirrors the routes table. */
+export interface RouteRecord {
+  id: string;
+  company_id: string;
+  name: string;
+  description: string | null;
+  is_active: boolean;
+  base_price_per_km: string;
+  created_at: string;
+}
+
+/** Mirrors the fare_rules table. */
+export interface FareRule {
+  id: string;
+  route_id: string;
+  passenger_category: PassengerCategory;
+  discount_percentage: string;
+  fixed_price: string | null;
+  peak_hour_surcharge_pct: string;
+  peak_start_hour: number | null;
+  peak_end_hour: number | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+/** Mirrors the trips table. */
+export interface Trip {
+  id: string;
+  passenger_id: string;
+  shift_id: string;
+  boarding_stop_id: string;
+  alighting_stop_id: string | null;
+  estimated_max_fare: string;
+  fare_charged: string | null;
+  status: TripStatus;
+  boarded_at: string;
+  alighted_at: string | null;
+  created_at: string;
+}
+
+/** Mirrors the transactions table. */
+export interface Transaction {
+  id: string;
+  wallet_id: string;
+  trip_id: string | null;
+  amount: string;
+  type: TransactionType;
+  description: string | null;
+  created_at: string;
+}
+
+/** Mirrors the shifts table. */
+export interface Shift {
+  id: string;
+  driver_id: string;
+  bus_id: string;
+  route_id: string;
+  started_at: string | null;
+  ended_at: string | null;
+  status: string;
+  created_at: string;
 }

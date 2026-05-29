@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { authRouter } from '../../modules/auth/auth.controller';
+import { fareRoutes } from '../../modules/fares/fare.routes';
 
 const v1Router = Router();
 
 v1Router.use('/auth', authRouter);
+v1Router.use('/fares', fareRoutes);
 
 /**
  * GET /api/v1

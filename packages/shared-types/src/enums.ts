@@ -63,3 +63,21 @@ export enum DocumentStatus {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
 }
+
+// ──────────────────────────────────────────────
+// Trips & Transactions
+// ──────────────────────────────────────────────
+
+export enum TripStatus {
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum TransactionType {
+  DEBIT = 'DEBIT',
+  CREDIT = 'CREDIT',
+  REFUND = 'REFUND',
+  HOLD = 'HOLD',
+  HOLD_RELEASE = 'HOLD_RELEASE',
+}
